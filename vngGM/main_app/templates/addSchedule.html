@@ -1,0 +1,57 @@
+{% extends "base.html" %}
+
+{% block index %}
+    <h1>Add Schedule</h1>
+    <form action="" method="post" novalidate>
+        <p>
+            {{ form.speaker.label }}<br>
+            {{ form.speaker(size=32) }}
+            {% for error in form.speaker.errors %}
+            <span style="color: red;">[{{ error }}]</span>
+            {% endfor %}
+        </p>
+        <p>
+            {{ form.date.label }}<br>
+            {{ form.date(size=32) }}
+            {% for error in form.date.errors %}
+            <span style="color: red;">[{{ error }}]</span>
+            {% endfor %}
+        </p>
+        <p>
+            {{ form.paper_title.label }}<br>
+            {{ form.paper_title(size=32) }}
+            {% for error in form.paper_title.errors %}
+            <span style="color: red;">[{{ error }}]</span>
+            {% endfor %}
+        </p>
+        <p>
+            {{ form.paper_doi.label }}<br>
+            {{ form.paper_doi(size=32) }}
+            {% for error in form.paper_doi.errors %}
+            <span style="color: red;">[{{ error }}]</span>
+            {% endfor %}
+        </p>
+        <p>
+            {{ form.paper_url.label }}<br>
+            {{ form.paper_url(size=32) }}
+            {% for error in form.paper_doi.errors %}
+            <span style="color: red;">[{{ error }}]</span>
+            {% endfor %}
+        </p>
+        <p>
+            {{ form.paper_proposer.label }}<br>
+            {{ form.paper_proposer(size=32) }}
+            {% for error in form.paper_proposer.errors %}
+            <span style="color: red;">[{{ error }}]</span>
+            {% endfor %}
+        </p>
+        <p>
+            {{ form.discussion.label }}<br>
+            {{ form.discussion(size=32) }}
+            {% for error in form.discussion.errors %}
+            <span style="color: red;">[{{ error }}]</span>
+            {% endfor %}
+        </p>
+        <p>{{ form.submit() }}</p>
+    </form>
+{% endblock %}
