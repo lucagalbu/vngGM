@@ -1,3 +1,25 @@
+<style type="text/css">
+table {
+   font-family: arial, sans-serif;
+   border-collapse: collapse;
+   width: 100%;
+}
+
+td, th {    
+   text-align: left;
+   padding: 8px;
+}
+
+tr:nth-child(even) {
+   background-color: #dddddd;
+}
+
+.right_border{
+   width:160px ;
+   border-right: 20px solid;
+}
+</style>
+
 {% extends "base.html" %}
 
 {% block index %}
@@ -5,17 +27,21 @@
     <h2>Schedule</h2>
     <div>
 
-	<table style="width:50%">
+	<table style='width:50%'>
 	<tr>
 		<th>Speaker</th>
 		<th>Date</th>
 		<th>Extra info</th>
+		<th>Paper proposer</th>
+		<th>Paper</th>
 	</tr>
 	{% for schedule in schedules %}
 	<tr>
-		<td>{{schedule.Users.name}}</td>
+		<td>{{schedule.user_schedule.name}}</td>
 		<td>{{schedule.Schedules.date}}</td>
-		<td>{{schedule.Schedules.extra_info}}</td>	
+		<td>{{schedule.Schedules.extra_info}}</td>
+		<td>{{schedule.user_paper.name}}</td>
+		<td><a href="{{schedule.Papers.url}}" target="_blank">{{schedule.Papers.title}}</a></td>
 	</tr>
 	{% endfor %}
 	</table> 

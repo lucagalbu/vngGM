@@ -18,6 +18,7 @@ class Papers(db.Model):
 	url = db.Column(db.String(200), index=True, unique=True)
 	doi = db.Column(db.String(100), index=True, unique=True)
 	proposer_id = db.Column(db.Integer, db.ForeignKey('users.id'))
+	schedule = db.relationship('Schedules', backref='paper', lazy='dynamic')
 
 	def __repr__(self):
 		return '<Paper {}>'.format(self.title)
@@ -27,3 +28,4 @@ class Schedules(db.Model):
 	date = db.Column(db.Date(), index=True, unique=True)
 	extra_info = db.Column(db.String(500))
 	speaker_id = db.Column(db.Integer, db.ForeignKey('users.id'))
+	paper_id = db.Column(db.Integer, db.ForeignKey('papers.id'))
