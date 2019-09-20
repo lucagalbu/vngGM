@@ -2,4 +2,23 @@
 
 {% block index %}
     <h1>Meeting schedule for the VNG group</h1>
+    <h2>Schedule</h2>
+    <div>
+
+	<table style="width:50%">
+	<tr>
+		<th>Speaker</th>
+		<th>Date</th>
+		<th>Extra info</th>
+	</tr>
+	{% for schedule in schedules %}
+	<tr>
+		<td>{{schedule.Users.name}}</td>
+		<td>{{schedule.Schedules.date}}</td>
+		<td>{{schedule.Schedules.extra_info}}</td>	
+	</tr>
+	{% endfor %}
+	</table> 
+
+</div>
 {% endblock %}

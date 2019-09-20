@@ -1,6 +1,7 @@
 from flask_wtf import FlaskForm
-from wtforms import StringField, SubmitField, DateField
+from wtforms import StringField, SubmitField
 from wtforms.validators import DataRequired, ValidationError, Email
+from wtforms.fields.html5 import DateField
 from main_app.models import Users, Papers
 from flask import flash
 from sqlalchemy import and_, or_
