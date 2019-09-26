@@ -3,6 +3,7 @@ from main_app.forms import AddUser, AddSchedule
 from flask import render_template, flash, redirect, url_for
 from main_app.models import Users, Papers, Schedules
 from sqlalchemy.orm import aliased
+from sqlalchemy import desc
 
 @app.route('/')
 @app.route('/index')
@@ -12,7 +13,7 @@ def index():
 	.join(user1, user1.id==Schedules.speaker_id, isouter=True) \
 	.join(Papers, Papers.id==Schedules.paper_id, isouter=True) \
 	.join(user2, user2.id==Papers.proposer_id, isouter=True) \
-	.order_by('date').all()
+	.order_by(desc('date')).all()
 
 	return render_template('index.html', title='Tmp', schedules=schedules)
 
@@ -35,21 +36,25 @@ def addUser():
 
 @app.route('/listUsers')
 def listUsers():
-	users = Users.query.all()
+	users = Users.query.order_by('id').all()
 	return render_template('listUsers.html', users=users)
 
 @app.route('/addSchedule', methods = ['POST', 'GET'])
 def addSchedule():
 	form = AddSchedule()
-	
-	if form.validate_on_submit():
-		user=Users.query.filter_by(name=form.paper_proposer.data).first()
-		paper = Papers(title=form.paper_title.data, url=form.paper_url.data, doi=form.paper_doi.data, proposer_id=user.id)
-		db.session.add(paper)
 
-		added_paper=Papers.query.filter_by(title=paper.title).first()
+	if form.validate_on_submit():
+		if form.paper_title.data is not "":
+			user=Users.query.filter_by(name=form.paper_proposer.data).first()
+			user_id = user.id if user is not None else None
+			paper = Papers(title=form.paper_title.data, url=form.paper_url.data, doi=form.paper_doi.data, proposer_id=user_id)
+			db.session.add(paper)
+
+		added_paper=Papers.query.filter_by(title=form.paper_title.data).first()
 		user=Users.query.filter_by(name=form.speaker.data).first()
-		schedule = Schedules(speaker_id=user.id, date=form.date.data, extra_info=form.discussion.data, paper_id=added_paper.id)
+		user_id = user.id if user is not None else None
+		added_paper_id = added_paper.id if added_paper is not None else None
+		schedule = Schedules(speaker_id=user_id, date=form.date.data, extra_info=form.discussion.data, paper_id=added_paper_id)
 		db.session.add(schedule)
 
 		db.session.commit()

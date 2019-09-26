@@ -2,9 +2,10 @@ from flask_wtf import FlaskForm
 from wtforms import StringField, SubmitField
 from wtforms.validators import DataRequired, ValidationError, Email
 from wtforms.fields.html5 import DateField
-from main_app.models import Users, Papers
+from main_app.models import Users, Papers, Schedules
 from flask import flash
-from sqlalchemy import and_, or_
+from datetime import timedelta
+from sqlalchemy import and_, or_, desc
 
 class AddUser(FlaskForm):
 	name = StringField('Name', validators=[DataRequired()])
@@ -24,8 +25,19 @@ class AddUser(FlaskForm):
 
 
 class AddSchedule(FlaskForm):
-	speaker = StringField('Speaker', validators=[DataRequired()])
-	date = DateField('Date', validators=[DataRequired()])
+	#Find the next user (Look at user list and select the ones with the next id)
+	current_user_id = Users.query.join(Schedules).order_by(desc('date')).first().id
+	if current_user_id == Users.query.order_by(desc('id')).first().id:
+		current_user_id == Users.query.order_by('id').first().id
+	next_user = Users.query.order_by(Users.id).filter(Users.id > current_user_id).first()
+	
+
+	#Find the next Thursday
+	current_day = Schedules.query.order_by(desc('date')).first().date
+	next_thursday = current_day + timedelta(7) if current_day.weekday() == 3 else current_day + timedelta((3-current_day.weekday()) % 7 )
+	
+	speaker = StringField('Speaker', validators=[DataRequired()], default = next_user.name)
+	date = DateField('Date', validators=[DataRequired()], default = next_thursday)
 	paper_title = StringField('Paper')
 	paper_doi = StringField('Paper doi')
 	paper_url = StringField('Paper url')
@@ -40,8 +52,4 @@ class AddSchedule(FlaskForm):
 		title_empty = self.paper_title.data == ''
 		if doi_url_not_empty and title_empty:
 				raise ValidationError('A doi or a url cannot be provided without a title for the paper.')
-		if not title_empty:
-			paper = Papers.query.filter(or_(Papers.title==self.paper_title.data, Papers.doi==self.paper_doi.data)).first()
-			if paper is not None:
-				raise ValidationError('This paper has already been proposed.')
-
+		

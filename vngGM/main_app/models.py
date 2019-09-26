@@ -14,9 +14,9 @@ class Users(db.Model):
 
 class Papers(db.Model):
 	id = db.Column(db.Integer, primary_key=True)
-	title = db.Column(db.String(400), index=True, unique=True)
-	url = db.Column(db.String(200), index=True, unique=True)
-	doi = db.Column(db.String(100), index=True, unique=True)
+	title = db.Column(db.String(400), index=True)
+	url = db.Column(db.String(200), index=True)
+	doi = db.Column(db.String(100), index=True)
 	proposer_id = db.Column(db.Integer, db.ForeignKey('users.id'))
 	schedule = db.relationship('Schedules', backref='paper', lazy='dynamic')
 
